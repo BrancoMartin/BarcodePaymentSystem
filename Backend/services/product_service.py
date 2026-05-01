@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from repositories.product_repository import ProductRepository
 from models.product import Product
-from services.ai_price_service import AIPriceService
-from services.attribute_service import AttributeService
+
 
 class ProductService:
     """Business logic service for products"""
@@ -10,8 +9,7 @@ class ProductService:
     def __init__(self, db: Session):
         self.db = db
         self.repo = ProductRepository(db)
-        self.ai_price_service = AIPriceService(db)
-        self.attribute_service = AttributeService(db)
+  
     
     def get_all(self) -> list[Product]:
         return self.repo.get_all()

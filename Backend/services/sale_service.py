@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from repositories.sale_repository import SaleRepository
 from models.sale import Sale
-from models.sale_item import SaleItem
+from models.item_sale import SaleItem
 from datetime import datetime
 
 

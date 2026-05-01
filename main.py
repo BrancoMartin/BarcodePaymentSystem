@@ -7,7 +7,7 @@ import threading
 import time
 import webview
 import uvicorn
-from backend.api.app import create_app
+from Backend.api.app import create_app
 
 HOST = "127.0.0.1"
 PORT = 8000
