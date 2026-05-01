@@ -41,9 +41,6 @@ class ProductService:
 
         product = Product(name=name, description=description, price=price, barcode=barcode)
         response = self.repo.create(product)
-        attribute = self.attribute_service.create_attributes(product.name, product.description,product)
-
-        print("ATRIBUTO CREADO", attribute)
 
         return {
     "success": True,
