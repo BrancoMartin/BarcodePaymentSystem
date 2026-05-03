@@ -58,7 +58,7 @@ class RepositoryBase(Generic[T]):
         
 
     def delete(self, entity: T) -> None:
-
+        print("ELIMINACION DE ENTIDAD: ", entity)
         try:
             self.session.delete(entity)
             self.session.commit()

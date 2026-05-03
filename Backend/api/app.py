@@ -41,7 +41,7 @@ def create_app() -> FastAPI:  # -> FastAPI indica que esta función devuelve una
 
         # Cualquier ruta que no sea /api devuelve el index.html de React
         
-        @app.get("/{full_path:path}")
+        @app.get("/{full_path:path}",  methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
         def serve_frontend(full_path: str):
             if full_path.startswith("api"):
                 from fastapi import Response

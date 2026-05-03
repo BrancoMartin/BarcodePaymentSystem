@@ -60,3 +60,11 @@ def handle_cancel_item_product(sale_id: int, item_id: int, service: SaleService 
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
     return result
+
+@router.delete("/{sale_id}")
+def delete_sale(sale_id: int, service: SaleService = Depends(get_sale_service)):
+    print(f"Intentando eliminar venta con ID: {sale_id}")
+    result = service.delete_sale(sale_id)
+    if "error" in result:
+        raise HTTPException(status_code=404, detail=result["error"])
+    return result

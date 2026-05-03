@@ -62,6 +62,7 @@ function ScanProductsOption() {
   };
 
   const getSaleDetails = async (saleId) => {
+    if (!saleId) return;
     try {
       const response = await axios.get(
         `http://localhost:8000/api/sales/${saleId}`,
@@ -72,13 +73,22 @@ function ScanProductsOption() {
     }
   };
 
-  const handleCancelProduct = async (itemId) => {
-    console.log(
-      `Intentando cancelar item con ID: ${itemId} de la venta ID: ${sale.id}`,
-    );
+  const handleCancelProduct = async (item) => {
+    if (!sale) return;
+    if (item.quantity === 1 && item.id === 1) {
+      console.log("CANCELANDO VENTA COMPLETA: ", sale.id);
+
+      const response = await axios.delete(
+        `http://localhost:8000/api/sales/${sale.id}`,
+      );
+
+      console.log("RESPUESTA CANCELAR VENTA", response.data);
+
+      getSaleDetails(sale.id);
+    }
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/sales/${sale.id}/items/${itemId}`,
+        `http://localhost:8000/api/sales/${sale.id}/items/${item.id}`,
       );
       getSaleDetails(sale.id); // Actualiza los detalles de la venta después de cancelar el producto
       console.log("RESPUESTA CANCELAR PRODUCTO", response.data.message);
@@ -135,7 +145,7 @@ function ScanProductsOption() {
                   <span>Cantidad: {item.quantity}</span>
                   <span>Precio unitario: ${item.unit_price}</span>
                   <span>Subtotal: ${item.subtotal}</span>
-                  <button onClick={() => handleCancelProduct(item.id)}>
+                  <button onClick={() => handleCancelProduct(item)}>
                     Cancelar producto
                   </button>
                 </div>

@@ -74,9 +74,7 @@ class SaleService:
             response = self.repo.remove_item_from_sale(item)
             if not response:
                 return {"error": "Failed to remove item from sale"}
-        if len(sale.items) == 0:
-            self.repo.db.delete(sale)
-            self.repo.db.commit()
+       
 
         print("SALE ANTES DE ACTUALIZAR:", sale)
         self.repo.update_total(sale)
@@ -144,3 +142,10 @@ class SaleService:
 
     def get_item_by_id_and_sale(self, sale_id: int, item_id: int):
         return self.repo.get_item_by_id_and_sale(sale_id, item_id)
+    
+    def delete_sale(self, sale_id: int):
+        sale = self.repo.get_by_id(sale_id)
+        if not sale:
+            return {"error": "Sale not found"}
+        self.repo.delete(sale)
+        return {"success": True}
