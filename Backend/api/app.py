@@ -33,15 +33,18 @@ def create_app() -> FastAPI:  # -> FastAPI indica que esta función devuelve una
     # Construimos la ruta absoluta a la carpeta dist de React
     # __file__ es la ruta de este archivo (app.py)
     # .. sube un nivel, ../.. sube dos niveles hasta llegar a la raíz
-    frontend_dist = os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")
+    # ✅ Imprime la ruta para ver dónde está buscando
+    frontend_dist = os.path.join(os.path.dirname(__file__), "..", "..", "Frontend", "dist")
+    print("Buscando frontend en:", os.path.abspath(frontend_dist))
+    print("Existe:", os.path.exists(frontend_dist))
     
     if os.path.exists(frontend_dist):  # solo si el build de React existe
         # Servimos los archivos estáticos (js, css, imágenes) desde /assets
         app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
 
         # Cualquier ruta que no sea /api devuelve el index.html de React
-        
-        @app.get("/{full_path:path}",  methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
+        print("Montando ruta para frontend")
+        @app.get("/{full_path:path}")
         def serve_frontend(full_path: str):
             if full_path.startswith("api"):
                 from fastapi import Response

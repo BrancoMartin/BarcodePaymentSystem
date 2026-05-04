@@ -26,7 +26,7 @@ def get_all(service: SaleService = Depends(get_sale_service)):
     sales = service.get_all()
     
     print("Ventas obtenidas del servicio:", sales)  # Agrega este print para verificar los datos
-    
+
     return sales
 
 

@@ -3,6 +3,8 @@ import axios from "axios";
 import Nav from "../Nav/nav";
 import "./ScanProductsOption.css";
 
+const BASE_URL = import.meta.env.PROD ? "" : "http://localhost:8000";
+
 function ScanProductsOption() {
   const [barcode, setBarcode] = useState("");
   const [sale, setSale] = useState(null);
@@ -14,9 +16,7 @@ function ScanProductsOption() {
   useEffect(() => {
     const loadPending = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/sales/pending",
-        );
+        const response = await axios.get(`${BASE_URL}/api/sales/pending`);
         if (response.data) setSale(response.data);
       } catch (err) {
         console.error("Error al cargar venta pendiente:", err);
@@ -35,7 +35,7 @@ function ScanProductsOption() {
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/products/barcode/${encodeURIComponent(barcode)}`,
+        `${BASE_URL}/api/products/barcode/${encodeURIComponent(barcode)}`,
       );
 
       console.log("RESPUESTA ESCANEAR PRODUCTO", response.data);
@@ -51,7 +51,7 @@ function ScanProductsOption() {
   const HandleCloseSale = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/sales/${sale.id}/close`,
+        `${BASE_URL}/api/sales/${sale.id}/close`,
       );
       console.log("RESPUESTA CERRAR VENTA", response.data);
       setMessage("Venta cerrada exitosamente");
@@ -64,9 +64,7 @@ function ScanProductsOption() {
   const getSaleDetails = async (saleId) => {
     if (!saleId) return;
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/sales/${saleId}`,
-      );
+      const response = await axios.get(`${BASE_URL}/api/sales/${saleId}`);
       setSale(response.data);
     } catch (err) {
       setError(err.response?.data?.detail || "No se pudo cargar la venta");
@@ -76,9 +74,7 @@ function ScanProductsOption() {
   const handleCancelSale = async () => {
     console.log("CANCELANDO VENTA COMPLETA: ", sale.id);
 
-    const response = await axios.delete(
-      `http://localhost:8000/api/sales/${sale.id}`,
-    );
+    const response = await axios.delete(`${BASE_URL}/api/sales/${sale.id}`);
     setSale(false);
     setBarcode("");
 
@@ -93,7 +89,7 @@ function ScanProductsOption() {
       console.log("CANCELANDO ITEM VENTA: ", item.id);
       try {
         const response = await axios.put(
-          `http://localhost:8000/api/sales/${sale.id}/items/${item.id}`,
+          `${BASE_URL}/api/sales/${sale.id}/items/${item.id}`,
         );
         getSaleDetails(sale.id); // Actualiza los detalles de la venta después de cancelar el producto
         console.log("RESPUESTA CANCELAR PRODUCTO", response.data.message);

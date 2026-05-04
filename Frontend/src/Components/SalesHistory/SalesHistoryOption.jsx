@@ -3,27 +3,59 @@ import axios from "axios";
 import Nav from "../Nav/nav";
 import "./SalesHistoryOption.css";
 
+const BASE_URL = import.meta.env.PROD ? "" : "http://localhost:8000";
+
 function SalesHistoryOption() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [buys, setBuys] = useState([]);
+
+  const parsearFecha = (fechaString) => {
+    // "04/05/2026 01:18"
+    const [fecha, hora] = fechaString.split(" ");
+    const [dia, mes, año] = fecha.split("/");
+    const [horas, minutos] = hora.split(":");
+    return new Date(año, mes - 1, dia, horas, minutos);
+  };
+
   useEffect(() => {
     const fetchHistory = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/api/sales/");
+      const response = await axios.get(`${BASE_URL}/api/sales/`);
 
-        setHistory(response.data);
-        console.log("HISTORIAL DE VENTAS: ", response.data);
-      } catch {
-        setError("No se pudo cargar el historial de ventas");
-      } finally {
-        setLoading(false);
-      }
+      console.log("RESPUESTA DE LA API: ", response.data.created_at);
+
+      const fechaHoy = new Date();
+
+      response.data.map((sale) => {
+        console.log("Fecha hoy: ", fechaHoy);
+
+        const fechaVenta = parsearFecha(sale.created_at);
+
+        console.log("Fecha venta: ", fechaVenta);
+
+        console.log("FECHA DE LA VENTA: ", fechaVenta);
+        console.log("FECHA DE HOY: ", fechaHoy);
+
+        const diferenciaHoras = (fechaHoy - fechaVenta) / (1000 * 60 * 60);
+
+        console.log("HORAS DE DIFERENCIA: ", diferenciaHoras);
+
+        if (diferenciaHoras <= 24) {
+          console.log("VENTA RECIENTE: ", sale);
+          setBuys((prevBuys) => [...prevBuys, sale]);
+          setLoading(false);
+        }
+      });
+
+      setHistory(response.data);
     };
 
     fetchHistory();
   }, []);
+
+  console.log("HISTORIAL DE VENTAS: ", buys);
 
   return (
     <section className="option-panel">
@@ -54,7 +86,7 @@ function SalesHistoryOption() {
               </tr>
             </thead>
             <tbody>
-              {history?.map((sale) => (
+              {buys.map((sale) => (
                 <tr key={sale.id}>
                   <td>{sale.id}</td>
                   <td>{sale.created_at}</td>

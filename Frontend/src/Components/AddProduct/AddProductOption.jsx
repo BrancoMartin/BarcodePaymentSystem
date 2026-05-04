@@ -4,6 +4,8 @@ import Nav from "../Nav/nav.jsx";
 import "./AddProductOption.css";
 import addProductValidation from "./Validation.jsx";
 
+const BASE_URL = import.meta.env.PROD ? "" : "http://localhost:8000";
+
 function AddProductOption() {
   const [barcode, setBarcode] = useState("");
   const [name, setName] = useState("");
@@ -41,15 +43,12 @@ function AddProductOption() {
     if (errors.length === undefined) {
       console.log("ENTRANDO A MANDAR LOS PRODUCTOS");
       try {
-        const response = await axios.post(
-          "http://localhost:8000/api/products/",
-          {
-            barcode,
-            name,
-            price,
-            description,
-          },
-        );
+        const response = await axios.post(`${BASE_URL}/api/products/`, {
+          barcode,
+          name,
+          price,
+          description,
+        });
         console.log("RESPUESTA", response.data);
         setMessage(`Producto creado: ${response.data.product.name}`);
         setBarcode("");
