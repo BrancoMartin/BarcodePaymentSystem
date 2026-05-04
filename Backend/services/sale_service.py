@@ -1,3 +1,5 @@
+from time import strptime
+
 from sqlalchemy.orm import Session
 from repositories.sale_repository import SaleRepository
 from models.sale import Sale
@@ -136,7 +138,7 @@ class SaleService:
             "id": sale.id,
             "state": sale.state,
             "total_price": sale.total_price,
-            "created_at": str(sale.created_at),
+            "created_at": sale.created_at.strftime("%d/%m/%Y %H:%M"),
             "items": items,
         }
 

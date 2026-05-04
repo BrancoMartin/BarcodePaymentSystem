@@ -54,8 +54,8 @@ function ScanProductsOption() {
         `http://localhost:8000/api/sales/${sale.id}/close`,
       );
       console.log("RESPUESTA CERRAR VENTA", response.data);
-      setMessage(response.data);
-      setSale(null); // Clear the sale after closing
+      setMessage("Venta cerrada exitosamente");
+      setSale(false);
     } catch (err) {
       setMessage(err.response?.data?.detail || "No se pudo cerrar la venta");
     }
@@ -73,17 +73,22 @@ function ScanProductsOption() {
     }
   };
 
+  const handleCancelSale = async () => {
+    console.log("CANCELANDO VENTA COMPLETA: ", sale.id);
+
+    const response = await axios.delete(
+      `http://localhost:8000/api/sales/${sale.id}`,
+    );
+    setSale(false);
+    setBarcode("");
+
+    console.log("RESPUESTA CANCELAR VENTA", response.data);
+  };
+
   const handleCancelProduct = async (item) => {
     console.log("SALE", sale);
     if (sale.items.length === 1 && sale.items[0].quantity === 1) {
-      console.log("CANCELANDO VENTA COMPLETA: ", sale.id);
-
-      const response = await axios.delete(
-        `http://localhost:8000/api/sales/${sale.id}`,
-      );
-      setSale(false);
-
-      console.log("RESPUESTA CANCELAR VENTA", response.data);
+      handleCancelSale();
     } else {
       console.log("CANCELANDO ITEM VENTA: ", item.id);
       try {
@@ -136,9 +141,8 @@ function ScanProductsOption() {
       {sale && (
         <>
           <div className="sale-preview">
-            <h3>Venta pendiente</h3>
-            <p>Estado: {sale.state}</p>
-            <p>Total: ${sale.total_price}</p>
+            <h2>TICKET</h2>
+            <h4>Total: ${sale.total_price}</h4>
             <div className="sale-items">
               {sale.items?.map((item) => (
                 <div key={item.id} className="sale-item">
@@ -146,16 +150,24 @@ function ScanProductsOption() {
                   <span>Cantidad: {item.quantity}</span>
                   <span>Precio unitario: ${item.unit_price}</span>
                   <span>Subtotal: ${item.subtotal}</span>
-                  <button onClick={() => handleCancelProduct(item)}>
+                  <button
+                    className="button-cancel"
+                    onClick={() => handleCancelProduct(item)}
+                  >
                     Cancelar producto
                   </button>
                 </div>
               ))}
             </div>
           </div>
-          <button className="button" onClick={HandleCloseSale}>
-            Cerrar venta
-          </button>
+          <div className="box-button">
+            <button className="button" onClick={HandleCloseSale}>
+              Cerrar venta
+            </button>
+            <button className="button-cancel" onClick={handleCancelSale}>
+              Cancelar venta completa
+            </button>
+          </div>
         </>
       )}
       {error && <p className="error-message">{error}</p>}

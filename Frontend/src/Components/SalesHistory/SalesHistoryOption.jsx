@@ -12,8 +12,9 @@ function SalesHistoryOption() {
     const fetchHistory = async () => {
       try {
         const response = await axios.get("http://localhost:8000/api/sales/");
-        console.log("HISTORIAL DE VENTAS: ", response.data);
+
         setHistory(response.data);
+        console.log("HISTORIAL DE VENTAS: ", response.data);
       } catch {
         setError("No se pudo cargar el historial de ventas");
       } finally {
@@ -48,7 +49,7 @@ function SalesHistoryOption() {
                 <th>ID</th>
                 <th>Fecha</th>
                 <th>Total</th>
-                <th>Items</th>
+                <th>Productos</th>
                 <th>Estado</th>
               </tr>
             </thead>
@@ -56,9 +57,15 @@ function SalesHistoryOption() {
               {history?.map((sale) => (
                 <tr key={sale.id}>
                   <td>{sale.id}</td>
-                  <td>{sale.date}</td>
-                  <td>{sale.total}</td>
-                  <td>{sale.items_count}</td>
+                  <td>{sale.created_at}</td>
+                  <td>{sale.total_price}</td>
+                  <td>
+                    {sale.items.map((item) => (
+                      <p>
+                        {item.product_name} - {item.quantity}
+                      </p>
+                    ))}
+                  </td>
                   <td>{sale.state}</td>
                 </tr>
               ))}
