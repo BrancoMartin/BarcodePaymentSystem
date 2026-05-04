@@ -61,7 +61,7 @@ function SalesHistoryOption() {
     <section className="option-panel">
       <Nav />
       <div className="box-title">
-        <h2 className="title">Historial de ventas</h2>
+        <h2 className="title">Historial de ventas de hoy</h2>
         <p className="description">
           Consulta las ventas ya cerradas y revisa el detalle de cada ticket.
         </p>
