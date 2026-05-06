@@ -28,3 +28,11 @@ dist/
 build/
 *.zip
 dist.zip
+
+.venv/
+venv38/
+dist/
+build/
+*.db
+*.zip
+*.exe
