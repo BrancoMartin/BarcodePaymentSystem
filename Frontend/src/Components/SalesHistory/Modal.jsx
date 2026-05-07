@@ -3,54 +3,14 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.PROD ? "" : "http://localhost:8000";
 
-function Modal({ date }) {
-  const [history, setHistory] = useState([]);
-  const [buys, setBuys] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const parsearFecha = (fechaString) => {
-    // "04/05/2026 01:18"
-    const [fecha, hora] = fechaString.split(" ");
-    const [dia, mes, año] = fecha.split("/");
-    const [horas, minutos] = hora.split(":");
-    return new Date(año, mes - 1, dia, horas, minutos);
-  };
-
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/sales/date/${date}`);
-
-        console.log("RESPUESTA DE LA API: ", response.data.created_at);
-
-        const formattedSales = response.data.map((sale) => {
-          sale.created_at = parsearFecha(sale.created_at);
-          return sale;
-        });
-
-        setBuys(formattedSales);
-        setHistory(formattedSales);
-      } catch (err) {
-        setError("Error al cargar las ventas.", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHistory();
-  }, []);
-
-  console.log("HISTORIAL DE VENTAS: ", buys);
-
+function Modal({ loading, error, buys }) {
   return (
     <div>
       {loading ? (
         <p>Cargando ventas...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
-      ) : history.length === 0 ? (
+      ) : buys.length === 0 ? (
         <p>No hay ventas registradas aún.</p>
       ) : (
         <table>
