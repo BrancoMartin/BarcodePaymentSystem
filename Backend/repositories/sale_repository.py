@@ -74,3 +74,18 @@ class SaleRepository(RepositoryBase[Sale]):
             self.db.commit()
             return True
         return False
+    
+    def get_sales_by_date(self, date: str) -> List[Sale]:
+        """Gets all sales for a specific date"""
+        try:
+            target_date = datetime.strptime(date, "%Y-%m-%d").date()
+        except ValueError:
+            return []
+        
+        start_datetime = datetime.combine(target_date, datetime.min.time())
+        end_datetime = datetime.combine(target_date, datetime.max.time())
+        
+        return self.db.query(Sale).filter(
+            Sale.created_at >= start_datetime,
+            Sale.created_at <= end_datetime
+        ).all()

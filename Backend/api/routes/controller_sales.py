@@ -69,3 +69,11 @@ def delete_sale(sale_id: int, service: SaleService = Depends(get_sale_service)):
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
     return result
+
+
+@router.get("/date/{date}")
+def get_sales_by_date(date: str, service: SaleService = Depends(get_sale_service)):
+    print(f"Obteniendo ventas para la fecha: {date}")
+    sales = service.get_sales_by_date(date)
+    print(f"Ventas obtenidas para la fecha {date}: {sales}")
+    return sales

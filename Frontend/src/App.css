@@ -2,7 +2,6 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  min-width: max-content;
 }
 
 :root {
@@ -22,9 +21,12 @@ body {
 }
 
 .option-panel {
+  overflow-x: hidden;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .option-form {

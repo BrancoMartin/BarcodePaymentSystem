@@ -152,3 +152,13 @@ class SaleService:
             return {"error": "Sale not found"}
         self.repo.delete(sale)
         return {"success": True}
+    
+
+    def get_sales_by_date(self, date_str: str):
+        try:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            return {"error": "Invalid date format. Use YYYY-MM-DD."}
+        
+        sales = self.repo.get_sales_by_date(date_obj)
+        return [self._format_sale(s) for s in sales]
