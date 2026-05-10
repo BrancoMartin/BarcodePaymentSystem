@@ -76,4 +76,9 @@ class SaleRepository(RepositoryBase[Sale]):
         return False
     
     def get_sales_by_date(self, date):
-        return self.db.query(Sale).filter(Sale.created_at == date).all()
+        sales = self.db.query(Sale).filter(Sale.created_at == date).all()
+        for sale in sales:
+            sale.items = self.db.query(SaleItem).filter(SaleItem.sale_id == sale.id).all()
+            for item in sale.items:
+                item.product = self.db.query(Product).filter(Product.id == item.product_id).first()
+        return sales

@@ -124,7 +124,6 @@ class SaleService:
         
         print(f"FECHA PARSEADA: {parse_date}")
 
-        
         sales = self.repo.get_sales_by_date(parse_date)
         
         print(f"SALES ENCONTRADAS PARA LA FECHA {parse_date}: {sales}")

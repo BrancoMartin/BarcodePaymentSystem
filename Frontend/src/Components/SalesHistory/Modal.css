@@ -1,0 +1,61 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: var(--surface-strong);
+  z-index: 1000;
+  border: 2px solid var(--primary);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+}
+
+.table-modal {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table-modal th,
+.table-modal td {
+  border: 1px solid var(--text-muted);
+  padding: 8px;
+  text-align: left;
+}
+
+.headers {
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+}
+
+.table-modal tbody tr:nth-child(even) {
+  background-color: var(--surface-soft);
+}
+
+.table-modal tbody tr:hover {
+  background-color: var(--bg);
+  color: rgb(255, 255, 255);
+  padding: 8px;
+  text-align: left;
+}
+
+.data {
+  background-color: #ffffffaf;
+  color: rgb(0, 0, 0);
+  padding: 8px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+}

@@ -12,6 +12,7 @@ function SalesHistoryOption() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   async function handleModal(date) {
     console.log("FECHA SELECCIONADA: ", date);
@@ -30,6 +31,7 @@ function SalesHistoryOption() {
       setLoading(false);
 
       setBuys(response.data);
+      setModalAbierto(true);
     } catch (err) {
       setError("Error al cargar las ventas.", err);
     }
@@ -52,7 +54,12 @@ function SalesHistoryOption() {
           value={new Date()}
         ></Calendar>
 
-        <Modal loading={loading} error={error} buys={buys}></Modal>
+        {modalAbierto && (
+          <>
+            <div className="overlay" onClick={() => setModalAbierto(false)} />
+            <Modal loading={loading} error={error} buys={buys}></Modal>
+          </>
+        )}
       </div>
     </section>
   );
