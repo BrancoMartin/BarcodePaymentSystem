@@ -12,40 +12,27 @@ function SalesHistoryOption() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [onClickDate, setOnClickDate] = useState(null);
 
-  const parsearFecha = (fechaString) => {
-    // "04/05/2026 01:18"
-    const [fecha, hora] = fechaString.split(" ");
-    const [dia, mes, año] = fecha.split("/");
-    const [horas, minutos] = hora.split(":");
-    return new Date(año, mes - 1, dia, horas, minutos);
-  };
+  async function handleModal(date) {
+    console.log("FECHA SELECCIONADA: ", date);
 
-  function handleModal(date) {
-    setOnClickDate(true);
-    const fetchHistory = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/sales/date/${date}`);
+    const dateParceada = date.toISOString().replace("T", " ").replace("Z", " ");
 
-        console.log("RESPUESTA DE LA API: ", response.data);
+    console.log("FECHA PARSEADA: ", dateParceada);
 
-        if (!response.data || response.data.length === 0) {
-          setBuys([]);
-        }
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/sales/date/${dateParceada}`,
+      );
 
-        const formattedSales = response.data.map((sale) => {
-          sale.created_at = parsearFecha(sale.created_at);
-          return sale;
-        });
+      console.log("RESPUESTA DE LA API: ", response.data);
 
-        setBuys(formattedSales);
-      } catch (err) {
-        setError("Error al cargar las ventas.", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setLoading(false);
+
+      setBuys(response.data);
+    } catch (err) {
+      setError("Error al cargar las ventas.", err);
+    }
   }
 
   return (
@@ -64,9 +51,8 @@ function SalesHistoryOption() {
           onClickDay={handleModal}
           value={new Date()}
         ></Calendar>
-        {onClickDate && (
-          <Modal loading={loading} error={error} buys={buys}></Modal>
-        )}
+
+        <Modal loading={loading} error={error} buys={buys}></Modal>
       </div>
     </section>
   );
