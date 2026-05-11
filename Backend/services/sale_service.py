@@ -50,15 +50,28 @@ class SaleService:
         return self._format_sale(sale)
 
     def remove_item_from_sale(self, sale_id: int, item_id: int):
+        print(f"INTENTANDO ELIMINAR EL ITEM {item_id} DE LA VENTA CON ID {sale_id}")
         item = self.repo.get_item_by_id_and_sale(sale_id, item_id)
+        print(f"ITEM OBTENIDO: {item}")
         if not item:
             return {"error": "Item not found"}
         sale = self.repo.get_by_id(sale_id)
+        print(f"VENTA OBTENIDA: {sale}")
         sale.total_price = sale.total_price - item.unit_price
-        response = self.repo.remove_item_from_sale(item)
-        if not response:
-            return {"error": "Failed to remove item from sale"}
+
+        print(f"TOTAL ACTUALIZADO DE LA VENTA: {sale.total_price}")
+        if item.quantity == 1:
+            self.repo.remove_item_from_sale(item)
+        else:
+            item.quantity -= 1
+            response = self.repo.update_item(item)
+            
+            print(f"RESPUESTA DE ACTUALIZAR ITEM: {response}")
+            if not response:
+                return {"error": "Error al querer eliminar una venta"}
+        
         self.repo.update_total(sale)
+        print(f"TOTAL ACTUALIZADO DE LA VENTA DESPUÉS DE ELIMINAR ITEM: {sale.total_price}")
         return self._format_sale(sale)
 
     def scan_product_by_barcode(self, barcode: str):

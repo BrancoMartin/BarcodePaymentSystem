@@ -82,3 +82,9 @@ class SaleRepository(RepositoryBase[Sale]):
             for item in sale.items:
                 item.product = self.db.query(Product).filter(Product.id == item.product_id).first()
         return sales
+    
+    def update_item(self, item: SaleItem) -> SaleItem:
+        """Updates an item in a sale"""
+        self.db.commit()
+        self.db.refresh(item)
+        return item

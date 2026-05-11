@@ -84,16 +84,17 @@ function ScanProductsOption() {
   };
 
   const handleCancelProduct = async (item) => {
-    console.log("ID DEL ITEM SALE", item.);
+    console.log("ITEM", item);
+    console.log("ID DEL ITEM SALE", item.id);
     console.log("SALE ID", sale.id);
     console.log("SALE", sale);
     if (sale.items.length === 1 && sale.items[0].quantity === 1) {
       handleCancelSale();
     } else {
-      console.log("CANCELANDO ITEM VENTA: ", item.product_id);
+      console.log("CANCELANDO ITEM VENTA: ", item.id);
       try {
         const response = await axios.put(
-          `${BASE_URL}/api/sales/${sale.id}/items/${item.product_id}`,
+          `${BASE_URL}/api/sales/${sale.id}/items/${item.id}`,
         );
         getSaleDetails(sale.id); // Actualiza los detalles de la venta después de cancelar el producto
         console.log("RESPUESTA CANCELAR PRODUCTO", response.data.message);
